@@ -1,0 +1,9 @@
+{
+  "name": "queryExamSeat",
+  "version": "1.0.0",
+  "description": "Query exam room and seat information",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}
