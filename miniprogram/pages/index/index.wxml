@@ -1,74 +1,24 @@
 <view class="page">
-  <view class="header">
-    <view class="title">考场查询</view>
-    <view class="subtitle">输入姓名和身份证号，查询考点、考场与座位号</view>
+  <view class="search card">
+    <input value="{{keyword}}" placeholder="搜索书名、作者或 ISBN" confirm-type="search" bindinput="onKeywordInput" bindconfirm="loadBooks" />
+    <button class="search-btn" bindtap="loadBooks">搜索</button>
   </view>
 
-  <view class="panel">
-    <view class="field">
-      <text class="label">姓名</text>
-      <input
-        class="input"
-        value="{{name}}"
-        placeholder="请输入姓名"
-        maxlength="20"
-        bindinput="onNameInput"
-      />
-    </view>
-
-    <view class="field">
-      <text class="label">身份证号</text>
-      <input
-        class="input"
-        value="{{idCard}}"
-        placeholder="请输入身份证号"
-        maxlength="18"
-        type="idcard"
-        bindinput="onIdCardInput"
-      />
-    </view>
-
-    <view wx:if="{{error}}" class="error">{{error}}</view>
-
-    <button
-      class="query-button"
-      type="primary"
-      loading="{{loading}}"
-      disabled="{{loading}}"
-      bindtap="onQuery"
-    >
-      {{loading ? '查询中' : '立即查询'}}
-    </button>
+  <view class="filters">
+    <view class="chip {{status === 'all' ? 'active' : ''}}" data-status="all" bindtap="switchStatus">全部</view>
+    <view class="chip {{status === 'available' ? 'active' : ''}}" data-status="available" bindtap="switchStatus">可借</view>
   </view>
 
-  <view wx:if="{{result}}" class="result">
-    <view class="result-title">查询结果</view>
+  <view wx:if="{{loading}}" class="empty">加载中...</view>
+  <view wx:elif="{{books.length === 0}}" class="empty">暂无图书</view>
 
-    <view class="result-row">
-      <text class="result-label">考生姓名</text>
-      <text class="result-value">{{result.name}}</text>
+  <view wx:for="{{books}}" wx:key="_id" class="book card" data-id="{{item._id}}" bindtap="openBook">
+    <view class="cover">{{item.coverText}}</view>
+    <view class="book-body">
+      <view class="book-title">{{item.title}}</view>
+      <view class="book-meta">{{item.author}} · {{item.category}}</view>
+      <view class="book-meta">馆藏 {{item.total}} 本，当前可借 {{item.available}} 本</view>
     </view>
-    <view class="result-row">
-      <text class="result-label">考点</text>
-      <text class="result-value">{{result.examSite}}</text>
-    </view>
-    <view class="result-row">
-      <text class="result-label">考场</text>
-      <text class="result-value">{{result.examRoom}}</text>
-    </view>
-    <view class="result-row">
-      <text class="result-label">座位号</text>
-      <text class="result-value important">{{result.seatNo}}</text>
-    </view>
-    <view wx:if="{{result.examTime}}" class="result-row">
-      <text class="result-label">考试时间</text>
-      <text class="result-value">{{result.examTime}}</text>
-    </view>
-    <view wx:if="{{result.address}}" class="result-row">
-      <text class="result-label">考点地址</text>
-      <text class="result-value">{{result.address}}</text>
-    </view>
-
-    <button class="reset-button" bindtap="onReset">重新查询</button>
+    <view class="tag {{item.available > 0 ? 'ok' : 'off'}}">{{item.available > 0 ? '可借' : '借完'}}</view>
   </view>
 </view>

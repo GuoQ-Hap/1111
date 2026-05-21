@@ -1,14 +1,35 @@
 {
   "pages": [
-    "pages/index/index"
+    "pages/index/index",
+    "pages/book/book",
+    "pages/mine/mine",
+    "pages/admin/admin"
   ],
   "window": {
-    "navigationBarTitleText": "考场查询",
-    "navigationBarBackgroundColor": "#0F766E",
+    "navigationBarTitleText": "云图书馆",
+    "navigationBarBackgroundColor": "#1f6f78",
     "navigationBarTextStyle": "white",
-    "backgroundColor": "#F6F8F7",
-    "backgroundTextStyle": "dark"
+    "backgroundColor": "#f6f8fb"
   },
-  "style": "v2",
+  "tabBar": {
+    "color": "#667085",
+    "selectedColor": "#1f6f78",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "图书"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的"
+      },
+      {
+        "pagePath": "pages/admin/admin",
+        "text": "管理"
+      }
+    ]
+  },
   "sitemapLocation": "sitemap.json"
 }

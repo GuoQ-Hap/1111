@@ -1,0 +1,76 @@
+.profile {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+}
+
+.avatar {
+  width: 88rpx;
+  height: 88rpx;
+  margin-right: 20rpx;
+  line-height: 88rpx;
+  text-align: center;
+  border-radius: 50%;
+  background: #1f6f78;
+  color: #fff;
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.name {
+  margin-bottom: 8rpx;
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12rpx;
+  margin: 22rpx 0;
+}
+
+.tab {
+  height: 68rpx;
+  line-height: 68rpx;
+  text-align: center;
+  border: 1rpx solid #d0d5dd;
+  border-radius: 8rpx;
+  background: #fff;
+  color: #475467;
+}
+
+.tab.active {
+  color: #1f6f78;
+  border-color: #1f6f78;
+  background: #e8f5f7;
+}
+
+.record {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+  padding: 22rpx;
+}
+
+.record-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  margin-bottom: 12rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.return-btn {
+  width: 132rpx;
+  margin-left: 16rpx;
+}
+
+.empty {
+  padding: 96rpx 0;
+  text-align: center;
+  color: #667085;
+}

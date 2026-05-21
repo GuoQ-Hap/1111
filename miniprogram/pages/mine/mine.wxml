@@ -1,0 +1,28 @@
+<view class="page">
+  <view class="profile card">
+    <view class="avatar">{{avatarText}}</view>
+    <view>
+      <view class="name">{{user.nickName || '微信用户'}}</view>
+      <view class="muted">当前借阅 {{activeCount}} 本</view>
+    </view>
+  </view>
+
+  <view class="tabs">
+    <view class="tab {{status === 'borrowed' ? 'active' : ''}}" data-status="borrowed" bindtap="switchStatus">借阅中</view>
+    <view class="tab {{status === 'pendingReturn' ? 'active' : ''}}" data-status="pendingReturn" bindtap="switchStatus">待确认</view>
+    <view class="tab {{status === 'returned' ? 'active' : ''}}" data-status="returned" bindtap="switchStatus">已归还</view>
+  </view>
+
+  <view wx:if="{{records.length === 0}}" class="empty">暂无记录</view>
+
+  <view wx:for="{{records}}" wx:key="_id" class="record card">
+    <view class="record-main">
+      <view class="title">{{item.book.title}}</view>
+      <view class="muted">借阅：{{item.borrowedAtText}}</view>
+      <view class="muted">应还：{{item.dueAtText}}</view>
+      <view wx:if="{{item.requestedReturnAtText && item.status === 'pendingReturn'}}" class="muted">申请归还：{{item.requestedReturnAtText}}</view>
+      <view wx:if="{{item.returnedAtText}}" class="muted">归还：{{item.returnedAtText}}</view>
+    </view>
+    <button wx:if="{{item.status === 'borrowed'}}" class="ghost-btn return-btn" data-id="{{item._id}}" bindtap="returnBook">归还</button>
+  </view>
+</view>

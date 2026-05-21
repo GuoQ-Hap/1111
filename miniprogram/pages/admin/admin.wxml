@@ -1,0 +1,85 @@
+<view class="page">
+  <view wx:if="{{!isAdmin}}" class="empty card">
+    <view class="empty-title">暂无管理权限</view>
+    <view class="muted">请联系管理员将当前账号设置为管理员。</view>
+  </view>
+
+  <block wx:else>
+    <view class="tabs">
+      <view class="tab {{tab === 'books' ? 'active' : ''}}" data-tab="books" bindtap="switchTab">图书</view>
+      <view class="tab {{tab === 'users' ? 'active' : ''}}" data-tab="users" bindtap="switchTab">用户</view>
+      <view class="tab {{tab === 'returns' ? 'active' : ''}}" data-tab="returns" bindtap="switchTab">归还</view>
+      <view class="tab {{tab === 'records' ? 'active' : ''}}" data-tab="records" bindtap="switchTab">记录</view>
+    </view>
+
+    <block wx:if="{{tab === 'books'}}">
+      <view class="panel card">
+        <input placeholder="书名" value="{{form.title}}" data-field="title" bindinput="onInput" />
+        <input placeholder="作者" value="{{form.author}}" data-field="author" bindinput="onInput" />
+        <input placeholder="出版社" value="{{form.publisher}}" data-field="publisher" bindinput="onInput" />
+        <input placeholder="分类" value="{{form.category}}" data-field="category" bindinput="onInput" />
+        <input placeholder="ISBN" value="{{form.isbn}}" data-field="isbn" bindinput="onInput" />
+        <input placeholder="馆藏数量" type="number" value="{{form.total}}" data-field="total" bindinput="onInput" />
+        <textarea placeholder="简介" value="{{form.summary}}" data-field="summary" bindinput="onInput" />
+        <button class="primary-btn" bindtap="saveBook">保存图书</button>
+      </view>
+
+      <button class="ghost-btn init" bindtap="initData">初始化示例数据</button>
+
+      <view wx:for="{{books}}" wx:key="_id" class="row card">
+        <view class="row-main">
+          <view class="title">{{item.title}}</view>
+          <view class="muted">{{item.author}} · 馆藏 {{item.total}}，可借 {{item.available}}</view>
+        </view>
+        <button class="danger-btn" data-id="{{item._id}}" data-title="{{item.title}}" bindtap="deleteBook">删除</button>
+      </view>
+    </block>
+
+    <block wx:elif="{{tab === 'users'}}">
+      <view wx:if="{{users.length === 0}}" class="empty">暂无用户</view>
+      <view wx:for="{{users}}" wx:key="_id" class="row card">
+        <view class="row-main">
+          <view class="title">{{item.nickName || '微信用户'}}</view>
+          <view class="muted">{{item.openid}}</view>
+          <view class="muted">角色：{{item.role === 'admin' ? '管理员' : '普通用户'}}</view>
+        </view>
+        <button wx:if="{{item.role !== 'admin'}}" class="ghost-btn action-btn" data-id="{{item._id}}" data-role="admin" bindtap="setUserRole">设为管理员</button>
+        <button wx:else class="ghost-btn action-btn" data-id="{{item._id}}" data-role="user" bindtap="setUserRole">设为用户</button>
+      </view>
+    </block>
+
+    <block wx:elif="{{tab === 'returns'}}">
+      <view wx:if="{{records.length === 0}}" class="empty">暂无待确认归还</view>
+      <view wx:for="{{records}}" wx:key="_id" class="record card">
+        <view class="row-main">
+          <view class="title">{{item.book.title}}</view>
+          <view class="muted">借阅人：{{item.user.nickName || '微信用户'}}</view>
+          <view class="muted">借阅：{{item.borrowedAtText}}，申请归还：{{item.requestedReturnAtText}}</view>
+        </view>
+        <button class="primary-mini" data-id="{{item._id}}" bindtap="confirmReturn">确认</button>
+      </view>
+    </block>
+
+    <block wx:else>
+      <view class="filters">
+        <view class="chip {{recordStatus === 'pendingReturn' ? 'active' : ''}}" data-status="pendingReturn" bindtap="switchRecordStatus">待确认</view>
+        <view class="chip {{recordStatus === 'borrowed' ? 'active' : ''}}" data-status="borrowed" bindtap="switchRecordStatus">借阅中</view>
+        <view class="chip {{recordStatus === 'returned' ? 'active' : ''}}" data-status="returned" bindtap="switchRecordStatus">已归还</view>
+        <view class="chip {{recordStatus === 'all' ? 'active' : ''}}" data-status="all" bindtap="switchRecordStatus">全部</view>
+      </view>
+
+      <view wx:if="{{records.length === 0}}" class="empty">暂无记录</view>
+      <view wx:for="{{records}}" wx:key="_id" class="record card">
+        <view class="row-main">
+          <view class="title">{{item.book.title}}</view>
+          <view class="muted">借阅人：{{item.user.nickName || '微信用户'}}</view>
+          <view class="muted">状态：{{item.statusText}}</view>
+          <view class="muted">借阅：{{item.borrowedAtText}}，应还：{{item.dueAtText}}</view>
+          <view wx:if="{{item.requestedReturnAtText}}" class="muted">申请归还：{{item.requestedReturnAtText}}</view>
+          <view wx:if="{{item.returnedAtText}}" class="muted">归还：{{item.returnedAtText}}</view>
+        </view>
+        <button wx:if="{{item.status === 'pendingReturn'}}" class="primary-mini" data-id="{{item._id}}" bindtap="confirmReturn">确认</button>
+      </view>
+    </block>
+  </block>
+</view>

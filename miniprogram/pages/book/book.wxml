@@ -1,0 +1,34 @@
+<view class="page">
+  <view wx:if="{{book}}" class="detail card">
+    <view class="header">
+      <view class="cover">{{book.coverText}}</view>
+      <view class="head-body">
+        <view class="title">{{book.title}}</view>
+        <view class="meta">{{book.author}}</view>
+        <view class="meta">{{book.publisher}} · {{book.category}}</view>
+      </view>
+    </view>
+
+    <view class="stats">
+      <view>
+        <text class="num">{{book.total}}</text>
+        <text class="label">馆藏</text>
+      </view>
+      <view>
+        <text class="num">{{book.available}}</text>
+        <text class="label">可借</text>
+      </view>
+      <view>
+        <text class="num">{{book.isbn || '-'}}</text>
+        <text class="label">ISBN</text>
+      </view>
+    </view>
+
+    <view class="section-title">简介</view>
+    <view class="summary">{{book.summary || '暂无简介'}}</view>
+  </view>
+
+  <button class="primary-btn borrow" disabled="{{!book || book.available <= 0 || submitting}}" bindtap="borrowBook">
+    {{book && book.available > 0 ? '立即借阅' : '暂无可借'}}
+  </button>
+</view>

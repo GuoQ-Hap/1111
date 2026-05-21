@@ -1,93 +1,50 @@
+const { call, toast } = require('../../utils/cloud')
+
 Page({
   data: {
-    name: '',
-    idCard: '',
-    loading: false,
-    result: null,
-    error: ''
+    keyword: '',
+    status: 'all',
+    books: [],
+    loading: false
   },
 
-  onNameInput(event) {
-    this.setData({
-      name: event.detail.value,
-      error: '',
-      result: null
-    });
+  onShow() {
+    this.loadBooks()
   },
 
-  onIdCardInput(event) {
-    const value = event.detail.value.toUpperCase();
-    this.setData({
-      idCard: value,
-      error: '',
-      result: null
-    });
+  onKeywordInput(event) {
+    this.setData({ keyword: event.detail.value })
   },
 
-  async onQuery() {
-    const name = this.data.name.trim();
-    const idCard = this.data.idCard.trim().toUpperCase();
+  switchStatus(event) {
+    this.setData({ status: event.currentTarget.dataset.status }, () => this.loadBooks())
+  },
 
-    if (!name) {
-      this.setData({ error: '请输入姓名' });
-      return;
-    }
-
-    if (!this.isValidIdCard(idCard)) {
-      this.setData({ error: '请输入正确的身份证号' });
-      return;
-    }
-
-    this.setData({
-      loading: true,
-      error: '',
-      result: null
-    });
-
+  async loadBooks() {
+    this.setData({ loading: true })
     try {
-      const response = await wx.cloud.callFunction({
-        name: 'queryExamSeat',
-        data: {
-          name,
-          idCard
-        }
-      });
-
-      const payload = response.result || {};
-
-      if (!payload.success) {
-        this.setData({
-          error: payload.message || '未查询到考场信息，请核对姓名和身份证号。',
-          result: null
-        });
-        return;
-      }
-
+      const { result } = await call('books', {
+        action: 'list',
+        keyword: this.data.keyword.trim(),
+        onlyAvailable: this.data.status === 'available'
+      })
       this.setData({
-        result: payload.data,
-        error: ''
-      });
-    } catch (error) {
-      this.setData({
-        error: '查询服务暂时不可用，请稍后再试。',
-        result: null
-      });
+        books: result.books.map(item => ({
+          ...item,
+          coverText: (item.title || '书').slice(0, 1)
+        }))
+      })
+    } catch (err) {
+      console.error(err)
+      toast('图书加载失败')
     } finally {
-      this.setData({ loading: false });
+      this.setData({ loading: false })
     }
   },
 
-  onReset() {
-    this.setData({
-      name: '',
-      idCard: '',
-      loading: false,
-      result: null,
-      error: ''
-    });
-  },
-
-  isValidIdCard(value) {
-    return /(^\d{15}$)|(^\d{17}[\dX]$)/.test(value);
+  openBook(event) {
+    wx.navigateTo({
+      url: `/pages/book/book?id=${event.currentTarget.dataset.id}`
+    })
   }
-});
+})

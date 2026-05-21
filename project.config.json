@@ -1,23 +1,15 @@
 {
-  "description": "Exam room query mini program",
-  "packOptions": {
-    "ignore": []
-  },
+  "appid": "touristappid",
+  "projectname": "cloud-library-miniprogram",
+  "miniprogramRoot": "miniprogram/",
+  "cloudfunctionRoot": "cloudfunctions/",
   "setting": {
     "urlCheck": true,
     "es6": true,
-    "postcss": true,
-    "minified": true,
     "enhance": true,
-    "showShadowRootInWxmlPanel": true,
-    "packNpmManually": false,
-    "packNpmRelationList": []
+    "postcss": true,
+    "minified": true
   },
   "compileType": "miniprogram",
-  "libVersion": "3.4.10",
-  "appid": "touristappid",
-  "projectname": "exam-room-query",
-  "cloudfunctionRoot": "cloudfunctions/",
-  "miniprogramRoot": "miniprogram/",
-  "condition": {}
+  "libVersion": "latest"
 }

@@ -1,19 +1,33 @@
 App({
+  globalData: {
+    envId: '',
+    user: null
+  },
+
   onLaunch() {
     if (!wx.cloud) {
       wx.showModal({
         title: '初始化失败',
-        content: '当前基础库不支持云开发，请升级微信或开发者工具。',
+        content: '请使用支持云开发的微信开发者工具打开项目',
         showCancel: false
-      });
-      return;
+      })
+      return
     }
 
-    const cloudEnv = '';
-
     wx.cloud.init({
-      env: cloudEnv || undefined,
+      env: this.globalData.envId || undefined,
       traceUser: true
-    });
+    })
+
+    this.bootstrapUser()
+  },
+
+  async bootstrapUser() {
+    try {
+      const { result } = await wx.cloud.callFunction({ name: 'login' })
+      this.globalData.user = result.user
+    } catch (err) {
+      console.error('login failed', err)
+    }
   }
-});
+})
